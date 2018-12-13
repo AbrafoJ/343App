@@ -6,7 +6,7 @@ var userList = [];
 var typingUsers = {};
 
 app.get('/', function(req, res){
-  res.send('<h1>AppCoda - SocketChat Server</h1>');
+  res.send('<h1> This is for our 343 project we didnt set up the website YEY</h1>');
 });
 
 
@@ -29,7 +29,6 @@ io.on('connection', function(clientSocket){
         break;
       }
     }
-
     delete typingUsers[clientNickname];
     io.emit("userList", userList);
     io.emit("userExitUpdate", clientNickname);
@@ -47,14 +46,21 @@ io.on('connection', function(clientSocket){
     io.emit("userExitUpdate", clientNickname);
   });
 
-
   clientSocket.on('chatMessage', function(clientNickname, message){
     var currentDateTime = new Date().toLocaleString();
+    console.log('user sent message: ', message);
     delete typingUsers[clientNickname];
     io.emit("userTypingUpdate", typingUsers);
     io.emit('newChatMessage', clientNickname, message, currentDateTime);
   });
 
+
+  clientSocket.on('vote',function(clientNickname,vote){
+	  console.log('AHH SOMEONE VOTED');
+//	  var currentDateTime = new Date().toLackeString();
+	  console.log(clientNickname, "voted: ", vote);
+	  io.emit('newVote', clientNickanme, vote);
+  });
 
   clientSocket.on("connectUser", function(clientNickname) {
       var message = "User " + clientNickname + " was connected.";
@@ -78,7 +84,7 @@ io.on('connection', function(clientSocket){
         userInfo["isConnected"] = true
         userList.push(userInfo);
       }
-
+      
       io.emit("userList", userList);
       io.emit("userConnectUpdate", userInfo)
   });
